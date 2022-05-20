@@ -6,9 +6,9 @@ import re
 
 app = Flask(__name__)
 
-ENV = 'dev'
+ENV = 'prod'
 
-if ENV == 'prod':
+if ENV == 'dev':
     app.debug = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:ConnorClark123!!@localhost/lexus'
 else:
@@ -16,7 +16,7 @@ else:
     if uri.startswith("postgres://"):
         uri = uri.replace("postgres://", "postgresql://", 1)
     app.debug = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = ''
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
