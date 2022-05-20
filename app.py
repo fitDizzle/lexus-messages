@@ -1,7 +1,8 @@
-import os
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from send_mail import send_mail
+import os
+import re
 
 app = Flask(__name__)
 
@@ -11,14 +12,15 @@ if ENV == 'prod':
     app.debug = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:ConnorClark123!!@localhost/lexus'
 else:
+    uri = os.getenv('postgres://efhunvhahuwfuw:9899b7fca3b499f0d411bb12ddfe935fb99302c58a517e4ba0867f9e180c031c@ec2-3-209-124-113.compute-1.amazonaws.com:5432/d5r1bqpu2acqio')
+    if uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
     app.debug = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-        'postgres://efhunvhahuwfuw:9899b7fca3b499f0d411bb12ddfe935fb99302c58a517e4ba0867f9e180c031c@ec2-3-209-124-113.compute-1.amazonaws.com:5432/d5r1bqpu2acqio').replace("://", "ql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = ''
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
 
 class Feedback(db.Model):
     __tablename__ = 'feedback'
@@ -27,13 +29,13 @@ class Feedback(db.Model):
     dealer = db.Column(db.String(200), unique=False)
     rating = db.Column(db.Integer)
     comments = db.Column(db.Text())
-
+    
     def __init__(self, customer, dealer, rating, comments):
         self.customer = customer
         self.dealer = dealer
         self.rating = rating
-        self.comments = comments
-
+        self.comments = comments        
+    
 
 @app.route('/')
 def index():
@@ -47,9 +49,9 @@ def submit():
         dealer = request.form['dealer']
         rating = request.form['rating']
         comments = request.form['comments']
-
+        
         print(customer, dealer, rating, comments)
-
+        
         if customer == '' or dealer == '':
             return render_template('index.html', message="Please enter required fields")
         if db.session.query(Feedback).filter(Feedback.customer == customer).count() == 0:
@@ -63,3 +65,4 @@ def submit():
 
 if __name__ == '__main__':
     app.run()
+    
