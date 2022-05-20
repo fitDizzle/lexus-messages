@@ -12,7 +12,7 @@ if ENV == 'dev':
     app.debug = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:ConnorClark123!!@localhost/lexus'
 else:
-    uri = os.getenv('postgres://efhunvhahuwfuw:9899b7fca3b499f0d411bb12ddfe935fb99302c58a517e4ba0867f9e180c031c@ec2-3-209-124-113.compute-1.amazonaws.com:5432/d5r1bqpu2acqio')
+    uri = 'postgres://efhunvhahuwfuw:9899b7fca3b499f0d411bb12ddfe935fb99302c58a517e4ba0867f9e180c031c@ec2-3-209-124-113.compute-1.amazonaws.com:5432/d5r1bqpu2acqio'
     if uri.startswith("postgres://"):
         uri = uri.replace("postgres://", "postgresql://", 1)
     app.debug = False
